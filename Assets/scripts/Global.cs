@@ -14,6 +14,29 @@ public class Global : MonoBehaviour {
 		return _instance;
 	}
 	}
+
+	public enum ObjType {any, square, triangle, circle};
+
+	private static ObjType _CurrentObjType;
+	public static ObjType CurrentObjType {
+		get {
+			return _CurrentObjType;
+		}
+		set {
+			_CurrentObjType = value;
+		}
+	}
+
+	private int _ObjSpawnCount;
+	public int ObjSpawnCount {
+		get {
+			return _ObjSpawnCount;
+		}
+	}
+
+	// set {_GlobalScore = value;
+	// TextLabel.text = _GlobalScore.ToString();
+	// }
 	public Vector2 MaxCameraBounds {
 		get {
 			return Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, 0f));
@@ -27,6 +50,8 @@ public class Global : MonoBehaviour {
 	}
 
 	void Awake() {
+		_CurrentObjType = ObjType.any;
+		_ObjSpawnCount = 10;
 		_instance = this;
 	}
 }
