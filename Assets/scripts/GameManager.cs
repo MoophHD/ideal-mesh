@@ -19,15 +19,22 @@ public class GameManager : MonoBehaviour {
 	}	
 
 	public void SpawnParticles() {
-		// if (Global.CurrentObjType == Global.ObjType.any) {
-		// 	print("!");
-		// }
 		// for (int i = 0; i < Global.Instance.ObjSpawnCount; i++) {
 		// 	GameObject newInst = Instantiate(objs[0], new Vector3(0,0,0), Quaternion.identity);
 		// 	newInst.GetComponent<SpriteRenderer>().color = colors[Random.Range(0, colors.Length)];
 		// }
+		GameObject objType;
+		if (Global.CurrentObjType == Global.ObjType.circle) {
+			objType = objs[0];
+		} else if (Global.CurrentObjType == Global.ObjType.square) {
+			objType = objs[1];	
+		} else if (Global.CurrentObjType == Global.ObjType.triangle) {
+			objType = objs[2];
+		} else {
+			objType = objs[Random.Range(0, objs.Length)];
+		}
 
-		GameObject newInst = Instantiate(objs[0], new Vector3(0,0,0), Quaternion.identity);
+		GameObject newInst = Instantiate(objType, new Vector3(0,2f,0), Quaternion.identity);
 		newInst.GetComponent<SpriteRenderer>().color = colors[Random.Range(0, colors.Length)];
 	}
 
