@@ -34,6 +34,11 @@ public class Global : MonoBehaviour {
 		}
 	}
 
+	public static T ParseEnum<T>(string value)
+	{
+		return (T) System.Enum.Parse(typeof(T), value, true);
+	}
+
 	// set {_GlobalScore = value;
 	// TextLabel.text = _GlobalScore.ToString();
 	// }
