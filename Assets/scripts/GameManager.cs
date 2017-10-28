@@ -6,6 +6,8 @@ public class GameManager : MonoBehaviour {
 	public GameObject[] objs;
 	private Color[] colors = {new Color((float)234/256,(float)165/256,(float)165/256), new Color((float)51/256,(float)51/256,(float)51/256)};
 
+	private Transform ObjParent;
+
 	private static GameManager _instance;
 	public static GameManager Instance {
 		get {
@@ -36,9 +38,11 @@ public class GameManager : MonoBehaviour {
 
 		GameObject newInst = Instantiate(objType, new Vector3(0,2f,0), Quaternion.identity);
 		newInst.GetComponent<SpriteRenderer>().color = colors[Random.Range(0, colors.Length)];
+		newInst.GetComponent<Transform>().SetParent(ObjParent);
 	}
 
 	void Awake() {
+		ObjParent = GameObject.Find("ObjContainer").GetComponent<Transform>();
 		_instance = this;
 	}
 }
