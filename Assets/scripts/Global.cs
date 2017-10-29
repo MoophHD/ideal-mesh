@@ -39,9 +39,6 @@ public class Global : MonoBehaviour {
 		return (T) System.Enum.Parse(typeof(T), value, true);
 	}
 
-	// set {_GlobalScore = value;
-	// TextLabel.text = _GlobalScore.ToString();
-	// }
 	public Vector2 MaxCameraBounds {
 		get {
 			return Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, 0f));
@@ -54,9 +51,13 @@ public class Global : MonoBehaviour {
 		}
 	}
 
+	private float _TuggerRange;
+	public float TuggerRange {get{return _TuggerRange;}}
+
 	void Awake() {
 		_CurrentObjType = ObjType.any;
 		_ObjSpawnCount = 10;
 		_instance = this;
+		_TuggerRange = 5f;
 	}
 }
