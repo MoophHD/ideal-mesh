@@ -58,6 +58,6 @@ public class Global : MonoBehaviour {
 		_CurrentObjType = ObjType.any;
 		_ObjSpawnCount = 10;
 		_instance = this;
-		_TuggerRange = 5f;
+		_TuggerRange = 2.5f;
 	}
 }
