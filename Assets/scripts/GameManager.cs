@@ -18,9 +18,19 @@ public class GameManager : MonoBehaviour {
 
 			return _instance;
 		}
-	}	
+	}
 
-	public void SpawnParticles() {
+	void OnEnable() {
+		Signals.OnObjSpawn += SpawnParticles;
+	}
+
+	void OnDisable()
+    {
+        Signals.OnObjSpawn -= SpawnParticles;
+    }
+
+
+	void SpawnParticles() {
 		// for (int i = 0; i < Global.Instance.ObjSpawnCount; i++) {
 		// 	GameObject newInst = Instantiate(objs[0], new Vector3(0,0,0), Quaternion.identity);
 		// 	newInst.GetComponent<SpriteRenderer>().color = colors[Random.Range(0, colors.Length)];

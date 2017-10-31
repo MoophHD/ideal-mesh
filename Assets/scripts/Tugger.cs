@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Tugger : MonoBehaviour {
-	private Transform[] grabbedObjs;
+	private List <GameObject> grabbedObjs = new List <GameObject>();
+
 	private float radius;
+	private float force = 5f;
+	private bool active = false;
 	void Start () {
 		InvokeRepeating("CheckArea", 0, 1f);
 	}
@@ -12,41 +15,41 @@ public class Tugger : MonoBehaviour {
 	void Awake() {
 		radius = Global.Instance.TuggerRange;
 	}
-
-	// void OnDrawGizmos() {
-    //     Gizmos.color = Color.yellow;
-    //     Gizmos.DrawSphere(GetComponent<Transform>().position, radius);
-    // }
-
 	void CheckArea() {
-		print("check");
 		Vector3 pos = GetComponent<Transform>().position;
 		Collider2D[] hitColliders = Physics2D.OverlapCircleAll(new Vector2(pos.x, pos.y), radius);
 		if (hitColliders.Length == 0) return;
+
 		for (int i=0;i < hitColliders.Length; i++) {
+			if (hitColliders[i].tag != "Object") continue;
+
 			GameObject curr = hitColliders[i].gameObject;
 			Transform currTr = curr.GetComponent<Transform>();
-			if (hitColliders[i].tag != "Object") continue;
-			DrawLine(currTr.position);
-			// if (System.Array.IndexOf(grabbedObjs, curr) == -1) {
-			// 	print(i);
-			// }
+			if (grabbedObjs.IndexOf(curr) == -1) {
+				grabbedObjs.Add(curr);
+			}
 		}
+
+
 	}
 
-	void DrawLine(Vector3 target) {
-		Vector3 start = GetComponent<Transform>().position;
+	void Update() {
+		if (Input.GetMouseButtonDown(1)) {
+			active = true;
+		} else if (Input.GetMouseButtonUp(1)) {
+			active = false;
+		}
+		
+		if (active) {
+			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+			GetComponent<Transform>().position = ray.GetPoint(0f);
+		}
 
-		GameObject myLine = new GameObject();
-		myLine.transform.position = start;
-		myLine.AddComponent<LineRenderer>();
-		LineRenderer lr = myLine.GetComponent<LineRenderer>();
-		lr.material = new Material(Shader.Find("Particles/Alpha Blended Premultiply"));
-		lr.startColor = Color.yellow;
-		lr.endColor = Color.yellow;
-		lr.startWidth = 0.1f;
-		lr.endWidth = 0.1f;
-		lr.SetPosition(0, start);
-		lr.SetPosition(1, target);
+		if (grabbedObjs.Count > 0) {
+			foreach (GameObject obj in grabbedObjs) {
+				obj.GetComponent<Rigidbody2D>().gravityScale = 0;
+				obj.GetComponent<Rigidbody2D>().position = Vector3.Lerp(obj.GetComponent<Transform>().position, GetComponent<Transform>().position, Time.deltaTime*force);
+			}
+		}
 	}
 }

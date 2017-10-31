@@ -34,10 +34,6 @@ public class Anchor : MonoBehaviour {
 
 	}
 
-	 public void ButtonPressed() {
-		 print("!");
-	 }
-
 	void Update() {
 		if (Input.GetMouseButtonDown(1)) {
 			active = true;
