@@ -8,33 +8,25 @@ public class GameManager : MonoBehaviour {
 
 	private Transform ObjParent;
 
-	private static GameManager _instance;
-	public static GameManager Instance {
-		get {
-			if (_instance == null) {
-				GameObject go = new GameObject("GameManager");
-				go.AddComponent<GameManager>();
-			}
-
-			return _instance;
-		}
-	}
 
 	void OnEnable() {
 		Signals.OnObjSpawn += SpawnParticles;
+		Signals.OnClear += Clear;
 	}
 
 	void OnDisable()
     {
         Signals.OnObjSpawn -= SpawnParticles;
+		Signals.OnClear -= Clear;
     }
 
+	void Clear() {
+		foreach (Transform child in ObjParent) {
+			GameObject.Destroy(child.gameObject);
+		}
+	}
 
 	void SpawnParticles() {
-		// for (int i = 0; i < Global.Instance.ObjSpawnCount; i++) {
-		// 	GameObject newInst = Instantiate(objs[0], new Vector3(0,0,0), Quaternion.identity);
-		// 	newInst.GetComponent<SpriteRenderer>().color = colors[Random.Range(0, colors.Length)];
-		// }
 		GameObject objType;
 		if (Global.CurrentObjType == Global.ObjType.circle) {
 			objType = objs[0];
@@ -46,13 +38,16 @@ public class GameManager : MonoBehaviour {
 			objType = objs[Random.Range(0, objs.Length)];
 		}
 
-		GameObject newInst = Instantiate(objType, new Vector3(0,2f,0), Quaternion.identity);
+		GameObject newInst = Instantiate(objType, new Vector3(getRandomHorizontalPos(),5f,0), Quaternion.identity);
 		newInst.GetComponent<SpriteRenderer>().color = colors[Random.Range(0, colors.Length)];
 		newInst.GetComponent<Transform>().SetParent(ObjParent);
 	}
 
+	float getRandomHorizontalPos() {
+		return Random.Range(Global.Instance.MinCameraBounds.x, Global.Instance.MaxCameraBounds.x);
+	}
+
 	void Awake() {
 		ObjParent = GameObject.Find("ObjContainer").GetComponent<Transform>();
-		_instance = this;
 	}
 }

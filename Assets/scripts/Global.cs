@@ -26,12 +26,8 @@ public class Global : MonoBehaviour {
 			_CurrentObjType = value;
 		}
 	}
-
-	private int _ObjSpawnCount;
-	public int ObjSpawnCount {
-		get {
-			return _ObjSpawnCount;
-		}
+	public static int GetObjCount() {
+		return GameObject.Find("ObjContainer").GetComponent<Transform>().childCount;
 	}
 
 	public static T ParseEnum<T>(string value)
@@ -56,7 +52,6 @@ public class Global : MonoBehaviour {
 
 	void Awake() {
 		_CurrentObjType = ObjType.any;
-		_ObjSpawnCount = 10;
 		_instance = this;
 		_TuggerRange = 2.5f;
 	}

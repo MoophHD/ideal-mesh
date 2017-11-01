@@ -5,12 +5,15 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class InputManager : MonoBehaviour {
-	public Button addBtn;
 	private static bool addBtnPressed = false;
 	private float pressTimeout = 0.15f;
 	private float pressTimeoutTimer = 0f;
 	public void SetObjType(string type) {
 		Global.CurrentObjType = Global.ParseEnum<Global.ObjType>(type);
+	}
+
+	public void ClearObjs() {
+		Signals.OnClearReq();
 	}
 
 	public void handleAddPointerDown() {
@@ -27,7 +30,6 @@ public class InputManager : MonoBehaviour {
 	void Update(){
 		if(addBtnPressed) pressTimeoutTimer += Time.deltaTime;
 		if (pressTimeoutTimer >= pressTimeout) {
-			print("!");
 			Signals.ObjSpawnRequest();
 		}
 	}

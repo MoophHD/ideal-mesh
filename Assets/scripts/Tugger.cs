@@ -4,19 +4,19 @@ using UnityEngine;
 
 public class Tugger : MonoBehaviour {
 	private List <GameObject> grabbedObjs = new List <GameObject>();
-
+	private Vector3 pos;
 	private float radius;
 	private float force = 5f;
 	private bool active = false;
 	void Start () {
 		InvokeRepeating("CheckArea", 0, 1f);
+		pos = GetComponent<Transform>().position;
 	}
 
 	void Awake() {
 		radius = Global.Instance.TuggerRange;
 	}
 	void CheckArea() {
-		Vector3 pos = GetComponent<Transform>().position;
 		Collider2D[] hitColliders = Physics2D.OverlapCircleAll(new Vector2(pos.x, pos.y), radius);
 		if (hitColliders.Length == 0) return;
 
@@ -32,8 +32,8 @@ public class Tugger : MonoBehaviour {
 
 
 	}
-
 	void Update() {
+		pos = GetComponent<Transform>().position; 
 		if (Input.GetMouseButtonDown(1)) {
 			active = true;
 		} else if (Input.GetMouseButtonUp(1)) {
@@ -46,9 +46,14 @@ public class Tugger : MonoBehaviour {
 		}
 
 		if (grabbedObjs.Count > 0) {
-			foreach (GameObject obj in grabbedObjs) {
+			foreach (GameObject obj in grabbedObjs.ToArray()) {
 				obj.GetComponent<Rigidbody2D>().gravityScale = 0;
-				obj.GetComponent<Rigidbody2D>().position = Vector3.Lerp(obj.GetComponent<Transform>().position, GetComponent<Transform>().position, Time.deltaTime*force);
+				obj.GetComponent<Rigidbody2D>().position = Vector3.Lerp(obj.GetComponent<Transform>().position, pos, Time.deltaTime*force);
+				print(Vector3.Distance(obj.GetComponent<Transform>().position, pos));
+				if (Vector3.Distance(obj.GetComponent<Transform>().position, pos) <= 9.9f) {
+					grabbedObjs.Remove(obj);
+					GameObject.Destroy(obj);
+				}
 			}
 		}
 	}
