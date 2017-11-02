@@ -3,14 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Tugger : MonoBehaviour {
-	private List <GameObject> grabbedObjs = new List <GameObject>();
+	private List <GameObject> grabbedObjs;
 	private Vector3 pos;
 	private float radius;
-	private float force = 5f;
+	private float force = 2.5f;
 	private bool active = false;
 	void Start () {
 		InvokeRepeating("CheckArea", 0, 1f);
 		pos = GetComponent<Transform>().position;
+		grabbedObjs = Global.grabbedObjs;
 	}
 
 	void Awake() {
@@ -34,6 +35,7 @@ public class Tugger : MonoBehaviour {
 	}
 	void Update() {
 		pos = GetComponent<Transform>().position; 
+		Global.Instance.TuggerPos = pos;
 		if (Input.GetMouseButtonDown(1)) {
 			active = true;
 		} else if (Input.GetMouseButtonUp(1)) {
@@ -47,10 +49,12 @@ public class Tugger : MonoBehaviour {
 
 		if (grabbedObjs.Count > 0) {
 			foreach (GameObject obj in grabbedObjs.ToArray()) {
-				obj.GetComponent<Rigidbody2D>().gravityScale = 0;
+				if (obj == null) {grabbedObjs.Remove(obj); return;}
+
+				if (obj.GetComponent<Rigidbody2D>().gravityScale != 0) obj.GetComponent<Rigidbody2D>().gravityScale = 0;
 				obj.GetComponent<Rigidbody2D>().position = Vector3.Lerp(obj.GetComponent<Transform>().position, pos, Time.deltaTime*force);
-				print(Vector3.Distance(obj.GetComponent<Transform>().position, pos));
-				if (Vector3.Distance(obj.GetComponent<Transform>().position, pos) <= 9.9f) {
+
+				if ((obj.GetComponent<Transform>().position-pos).sqrMagnitude <= 94.65f) { //95
 					grabbedObjs.Remove(obj);
 					GameObject.Destroy(obj);
 				}

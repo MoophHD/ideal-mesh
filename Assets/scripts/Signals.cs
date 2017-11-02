@@ -12,4 +12,6 @@ public class Signals : MonoBehaviour
     public static event ClearObjs OnClear;
 
     public static void OnClearReq() {OnClear();}
+
+    
 }

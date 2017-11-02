@@ -47,10 +47,15 @@ public class Global : MonoBehaviour {
 		}
 	}
 
+	public Vector3 TuggerPos {get;set;}
+
 	private float _TuggerRange;
 	public float TuggerRange {get{return _TuggerRange;}}
 
+	public static List <GameObject> grabbedObjs;
+
 	void Awake() {
+		grabbedObjs = new List <GameObject>();
 		_CurrentObjType = ObjType.any;
 		_instance = this;
 		_TuggerRange = 2.5f;
