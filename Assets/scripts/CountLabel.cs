@@ -13,12 +13,15 @@ public class CountLabel : MonoBehaviour {
 	void OnEnable() {
 		Signals.OnObjSpawn += UpdateContent;
 		Signals.OnClear += handleOnClear;
+		Signals.OnDestroyObj += UpdateContent;
 	}
 
 	void OnDisable()
     {
         Signals.OnObjSpawn -= UpdateContent;
 		Signals.OnClear -= handleOnClear;
+		Signals.OnDestroyObj -= UpdateContent;
+		
     }
 
 	void UpdateContent() {

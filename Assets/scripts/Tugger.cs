@@ -8,8 +8,22 @@ public class Tugger : MonoBehaviour {
 	private float radius;
 	private float force = 2.5f;
 	private bool active = false;
+
+	void OnEnable() {
+        Signals.OnKillPlayer += Suicide;
+	}
+
+	void OnDisable()
+    {
+        Signals.OnKillPlayer -= Suicide;
+    }
+
+	void Suicide() {
+		Destroy(this.gameObject);
+	}
+
 	void Start () {
-		InvokeRepeating("CheckArea", 0, 1f);
+		InvokeRepeating("CheckArea", 0, 0.45f);
 		pos = GetComponent<Transform>().position;
 		grabbedObjs = Global.grabbedObjs;
 	}
@@ -55,6 +69,8 @@ public class Tugger : MonoBehaviour {
 				obj.GetComponent<Rigidbody2D>().position = Vector3.Lerp(obj.GetComponent<Transform>().position, pos, Time.deltaTime*force);
 
 				if ((obj.GetComponent<Transform>().position-pos).sqrMagnitude <= 94.65f) { //95
+					if (obj.GetComponent<Obj>().isCorrupted) Global.Instance.Health -= 1;
+					Signals.DestroyObjReq();
 					grabbedObjs.Remove(obj);
 					GameObject.Destroy(obj);
 				}

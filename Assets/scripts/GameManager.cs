@@ -5,9 +5,9 @@ using UnityEngine;
 public class GameManager : MonoBehaviour {
 	public GameObject[] objs;
 	private Color[] colors = {new Color((float)234/256,(float)165/256,(float)165/256), new Color((float)51/256,(float)51/256,(float)51/256)};
-
+	private Color corruptedObjColor = new Color((float)134/256,(float)0/256,(float)200/256);
 	private Transform ObjParent;
-
+	private int CorruptedObjSpawnRate = 15;
 
 	void OnEnable() {
 		Signals.OnObjSpawn += SpawnParticles;
@@ -26,6 +26,17 @@ public class GameManager : MonoBehaviour {
 		}
 	}
 
+	public void ToggleAutoSpawn() {
+		bool oldBool = Global.Instance.AutoSpawn;
+		if (!oldBool) {
+			InvokeRepeating("SpawnParticles", 0f, 0.25f);
+		} else {
+			CancelInvoke("SpawnParticles");
+		}
+
+		Global.Instance.AutoSpawn = !oldBool;
+	}
+
 	void SpawnParticles() {
 		GameObject objType;
 		if (Global.CurrentObjType == Global.ObjType.circle) {
@@ -39,7 +50,15 @@ public class GameManager : MonoBehaviour {
 		}
 
 		GameObject newInst = Instantiate(objType, new Vector3(getRandomHorizontalPos(),5f,0), Quaternion.identity);
-		newInst.GetComponent<SpriteRenderer>().color = colors[Random.Range(0, colors.Length)];
+
+		if (Random.Range(0, 100) <= CorruptedObjSpawnRate) {
+			newInst.GetComponent<Obj>().isCorrupted =true;
+			newInst.GetComponent<SpriteRenderer>().color = corruptedObjColor;
+		} else {
+			newInst.GetComponent<Obj>().isCorrupted =false;
+			newInst.GetComponent<SpriteRenderer>().color = colors[Random.Range(0, colors.Length)];
+		}
+
 		newInst.GetComponent<Transform>().SetParent(ObjParent);
 	}
 

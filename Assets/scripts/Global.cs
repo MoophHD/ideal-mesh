@@ -48,16 +48,32 @@ public class Global : MonoBehaviour {
 	}
 
 	public Vector3 TuggerPos {get;set;}
+	public bool AutoSpawn {get;set;}
 
 	private float _TuggerRange;
 	public float TuggerRange {get{return _TuggerRange;}}
 
 	public static List <GameObject> grabbedObjs;
 
+	private int _Health;
+	public int Health {
+		get {
+			return _Health;
+		}
+		set {
+			_Health = value;
+			if (_Health <= 0) {
+				Signals.PlayerKillReq();
+			}
+		}
+	}
+
 	void Awake() {
 		grabbedObjs = new List <GameObject>();
+		AutoSpawn = false;
 		_CurrentObjType = ObjType.any;
 		_instance = this;
 		_TuggerRange = 2.5f;
+		_Health = 1;
 	}
 }

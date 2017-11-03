@@ -13,5 +13,13 @@ public class Signals : MonoBehaviour
 
     public static void OnClearReq() {OnClear();}
 
-    
+    public delegate void KillPlayer();
+    public static event KillPlayer OnKillPlayer;
+
+    public static void PlayerKillReq() {OnKillPlayer();}
+
+    public delegate void DestroyObj();
+    public static event DestroyObj OnDestroyObj;
+
+    public static void DestroyObjReq() {OnDestroyObj();}
 }
